@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="SemLayoutDiff: Semantic Layout Generation with Diffusion Model for Indoor Scene Synthesis">
+  <meta name="keywords" content="SemLayoutDiff, semantic layout, diffusion model, indoor scene synthesis">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <title>SemLayoutDiff</title>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FVDFJ40CY5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-FVDFJ40CY5');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <!-- Replace local fontawesome with CDN version -->
+  <!-- <link rel="stylesheet" href="./static/css/fontawesome.all.min.css"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- <link rel="icon" href="./static/images/favicon.svg"> -->
+
+  <style>
+    /* Reduce spacing between sections */
+    .section {
+      padding: 1.5rem 1.5rem;  /* Default is 3rem 1.5rem */
+    }
+    
+    /* Reduce margins between headings and content */
+    .title {
+      margin-bottom: 1rem !important;
+    }
+    
+    /* Reduce spacing between elements */
+    .content p, .content h3, .content h4 {
+      margin-bottom: 0.75rem;
+    }
+    
+    /* Mathematical notation styling */
+    .math, i {
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: normal;
+      font-size: 1.05em;
+      letter-spacing: 0.02em;
+    }
+    
+    /* Make subscripts larger and more readable */
+    sub {
+      font-size: 0.9em !important;
+      vertical-align: sub;
+      line-height: 0;
+      font-weight: normal;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    
+    /* Style for mathematical notation in italics with subscripts */
+    i sub {
+      font-size: 0.95em !important;
+      font-style: normal;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: normal;
+    }
+    
+    /* Superscripts styling */
+    sup {
+      font-size: 0.9em !important;
+      vertical-align: super;
+      line-height: 0;
+      font-weight: normal;
+      font-family: 'Times New Roman', Times, serif;
+    }
+    
+    /* Mathematical expressions in paragraphs */
+    p i, .content i {
+      font-size: 1.05em;
+      font-family: 'Times New Roman', Times, serif;
+      font-style: italic;
+      padding: 0 1px;
+    }
+    
+    /* Image cropping styles to remove white space */
+    .image-container {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+    }
+    
+    .cropped-image {
+      width: 170%;
+      height: auto;
+      margin-left: -20%;
+      margin-right: -50%;
+      display: block;
+    }
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- Replace local fontawesome JS with CDN version -->
+  <!-- <script defer src="./static/js/fontawesome.all.min.js"></script> -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-widescreen">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-2 publication-title">
+              SemLayoutDiff: Semantic Layout Generation with Diffusion Model for Indoor Scene Synthesis
+            </h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://sun-xh.github.io/">Xiaohao Sun</a><sup>1</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://dv-fenix.github.io/">Divyam Goel</a><sup>2</sup>,
+              </span>
+              <span class="author-block">
+                  <a href="https://angelxuanchang.github.io/">Angel X. Chang</a><sup>1,3</sup>,
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Simon Fraser University,</span>
+              <span class="author-block"><sup>2</sup>CMU,</span>
+              <span class="author-block"><sup>3</sup>Alberta Machine Intelligence Institute (Amii)</span>
+            </div>
+            <!-- <div class="is-size-5 publication-authors">
+              <span class="author-block" style="color:#a771ac">3DV 2025 (Oral)</span>
+            </div> -->
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <!-- <span class="link-block">
+                  <a href=""
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span> -->
+                <span class="link-block">
+                  <a href="" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+
+                <span class="link-block">
+                  <a href="" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                    </span>
+                    <span>Video</span>
+                  </a>
+                </span>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-widescreen">
+      <div class="columns is-centered">
+        <!-- Abstract. --> 
+        <div class="column is-full-width is-large">
+          <div class="column has-text-centered">
+            <div class="center-container" style="margin-left: -10px">
+              <!-- <h2 class="title is-3">Abstract</h2> -->
+              <img src="./static/images/teaser.png">
+            </div>
+
+            <div class="content has-text-justified mt-4">
+              We present SemLayoutDiff, a unified model for synthesizing diverse 3D indoor scenes across multiple room types.
+              The model introduces a scene layout representation combining a top-down semantic map and attributes for each object. 
+              Unlike prior approaches, which cannot condition on architectural constraints, SemLayoutDiff employs a categorical diffusion model capable of conditioning scene synthesis explicitly on room masks. 
+              It first generates a coherent semantic map, followed by a cross-attention-based network to predict furniture placements that respect the synthesized layout.
+              Our method also accounts for architectural elements such as doors and windows, ensuring that generated furniture arrangements remain practical and unobstructed.
+              Experiments on the 3D-FRONT dataset show that SemLayoutDiff produces spatially coherent, realistic, and varied scenes, outperforming previous methods.
+            </div>
+          </div>
+        </div>
+        <!--/ Abstract. -->
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-widescreen">
+      <!-- Data representation. -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <div class="content has-text-justified">
+            <div class="center-container">
+              <h3 class="title is-3">Data Representation</h3>
+            </div>
+            <p>
+                We represent the scene in two parts: the 2D top‑down semantic map with a fixed physical unit per pixel (middle) and the 3D bounding boxes with orientations for object‑level attributes (right). 
+                Note that the left image is the corresponding rendered scene.
+            </p>
+            <div style="text-align: center;">
+              <img src="./static/images/data_representation.png" style="max-width: 50%;">
+            </div>
+          </div>
+        </div> 
+      </div>  
+    </div> 
+    <!--/ Data representation. -->
+  </section>
+
+  <section class="section">
+    <div class="container is-max-widescreen">
+      <!-- Methods. -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <div class="content has-text-justified">
+            <div class="center-container">
+              <h3 class="title is-3">Method Overview</h3>
+            </div>
+            <p>
+              From left: (a) is the unified diffusion model that is conditioned on the room mask, and room type <i>c<sub>room</sub></i>. During the denoising process, the <i>arch mask</i> or <i>floor mask</i> embedding is added to the noise input embedding. The room type embedding is added to the timestep embedding. 
+              (b) is the object attribute prediction model with a semantic layout map as input. <i>s<sub>i</sub></i>, <i>p<sub>i</sub></i>, <i>r<sub>i</sub></i> indicate the <i>i</i>th instance's size, position, and orientation. At training time, we use ground-truth instance masks. During inference the semantic layout map is split into instance masks by using connected component analysis. The layout feature and the mask feature are passed to a cross-attention layer to get the final object instance feature, which is used to predict attributes.
+              (c) During inference,  objects are retrieved to match the category <i>c<sub>i</sub></i> and size <i>s<sub>i</sub></i>, and arranged using the position <i>p<sub>i</sub></i> and orientation <i>r<sub>i</sub></i>. 
+              Our <i>SemLayoutDiff</i> generates scenes with fewer errors and respects architectural constraints by keeping furniture within room boundaries and maintaining clear spaces around doors (<i>red</i>) and windows (<i>pink</i>), whereas DiffuScene and MiDiffusion do not.
+            </p>
+            <div style="text-align: center;">
+              <img src="./static/images/model.png">
+            </div>
+          </div>
+        </div> 
+      </div>  
+    </div> 
+    <!--/ Methods. -->
+  </section>
+
+  <section class="section">
+    <!-- Results. -->
+    <div class="container is-max-widescreen">
+      <div class="center-container">
+
+        <h3 class="title is-3">Results</h3>
+
+        <div class="content has-text-justified">
+          <h4 class="title is-4">Comparison with Prior Methods</h4>
+          <p>
+            Comparison of generated scenes using different methods with <i>arch mask conditioning</i>. 
+            For each scene, we show the bounding box layout before object retrieval, inset on the upper left.
+            Errors are indicated with color-coded circles (see <i>User Study</i> for error types).
+            Our <i>SemLayoutDiff</i> generates scenes with fewer errors and respects architectural constraints by keeping furniture within room boundaries and maintaining clear spaces around doors (<i>red</i>) and windows (<i>pink</i>), whereas DiffuScene and MiDiffusion do not.
+          </p>
+        </div>
+        <div style="text-align: center;">
+          <img src="./static/images/qua-compare-arch.png">
+        </div>
+
+        <div class="content has-text-justified">
+            <h4 class="title is-4">More Qualitative Results for SemLayoutDiff</h4>
+            <p>
+              Sample results showing diverse scene layouts generated by our method.
+            </p>
+          </div>
+          <div class="columns is-multiline">
+            <div class="column is-3">
+              <div class="image-container">
+                <img src="./static/images/sample_1.webp" alt="Sample 1" class="cropped-image">
+              </div>
+            </div>
+            <div class="column is-3">
+              <div class="image-container">
+                <img src="./static/images/sample_4.webp" alt="Sample 2" class="cropped-image">
+              </div>
+            </div>
+            <div class="column is-3">
+              <div class="image-container">
+                <img src="./static/images/sample_3.webp" alt="Sample 3" class="cropped-image">
+              </div>
+            </div>
+            <div class="column is-3">
+              <div class="image-container">
+                <img src="./static/images/sample_2.webp" alt="Sample 4" class="cropped-image">
+              </div>
+            </div>
+            <div class="column is-3">
+              <div class="image-container">
+                <img src="./static/images/sample_5.webp" alt="Sample 5" class="cropped-image">
+              </div>
+            </div>
+            <div class="column is-3">
+              <div class="image-container">
+                <img src="./static/images/sample_6.webp" alt="Sample 6" class="cropped-image">
+              </div>
+            </div>
+            <div class="column is-3">
+              <div class="image-container">
+                <img src="./static/images/sample_7.webp" alt="Sample 7" class="cropped-image">
+              </div>
+            </div>
+            <div class="column is-3">
+              <div class="image-container">
+                <img src="./static/images/sample_8.webp" alt="Sample 8" class="cropped-image">
+              </div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+    <!--/ Results. -->
+  </section>
+
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-widescreen content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>
+        To-do
+      </code></pre>
+    </div>
+  </section>
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-widescreen content">
+      <h2 class="title">Acknowledgements</h2>
+      <p>
+        This work was funded in part by a CIFAR AI Chair and NSERC Discovery Grants, and enabled by support from the <a href="https://alliancecan.ca/">Digital Research Alliance of Canada</a> and a CFI/BCKDF JELF.
+        We thank Ivan Tam for help with running SceneEval; Yiming Zhang and Jiayi Liu for suggestions on figures; Derek Pun, Dongchen Yang, Xingguang Yan, and Manolis Savva for discussions, proofreading, and paper suggestions.  
+        We also thank the anonymous reviewers for their feedback. 
+      </p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <a class="icon-link" href="">
+          <i class="fas fa-file-pdf"></i>
+        </a>
+        <a class="icon-link" href="" class="external-link" disabled>
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This website is licensed under a <a rel="license"
+                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+                Commons Attribution-ShareAlike 4.0 International License</a>.
+              The template is borrowed from <a href="https://nerfies.github.io/">Nerfies</a>.
+              Please check out their great work if you find it helpful as well.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
