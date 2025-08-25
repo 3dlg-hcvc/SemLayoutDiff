@@ -172,7 +172,7 @@
                     <span class="icon">
                       <i class="fab fa-github"></i>
                     </span>
-                    <span>Code</span>
+                    <span>Code (Coming Soon)</span>
                   </a>
                 </span>
 
@@ -181,7 +181,7 @@
                     <span class="icon">
                       <i class="fab fa-youtube"></i>
                     </span>
-                    <span>Video</span>
+                    <span>Video (Coming Soon)</span>
                   </a>
                 </span>
 
@@ -202,7 +202,7 @@
           <div class="column has-text-centered">
             <div class="center-container" style="margin-left: -10px">
               <!-- <h2 class="title is-3">Abstract</h2> -->
-              <img src="./static/images/teaser.png">
+              <img src="./static/images/teaser.png" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 10px;">
             </div>
 
             <div class="content has-text-justified mt-4">
@@ -229,12 +229,18 @@
             <div class="center-container">
               <h3 class="title is-3">Data Representation</h3>
             </div>
-            <p>
-                We represent the scene in two parts: the 2D top‑down semantic map with a fixed physical unit per pixel (middle) and the 3D bounding boxes with orientations for object‑level attributes (right). 
-                Note that the left image is the corresponding rendered scene.
-            </p>
-            <div style="text-align: center;">
-              <img src="./static/images/data_representation.png" style="max-width: 50%;">
+            <div class="columns is-vcentered is-centered">
+              <div class="column is-4">
+                <p style="font-size: 1.1em; line-height: 1.6;">
+                    We represent the scene in two parts: the 2D top‑down semantic map with a fixed physical unit per pixel (middle) and the 3D bounding boxes with orientations for object‑level attributes (right).
+                </p>
+                <p style="font-size: 1.1em; line-height: 1.6; margin-top: 0.5rem;">
+                    <strong>Note:</strong> The left image is the corresponding rendered scene.
+                </p>
+              </div>
+              <div class="column is-5 has-text-centered">
+                <img src="./static/images/data_representation.png" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+              </div>
             </div>
           </div>
         </div> 
@@ -259,7 +265,7 @@
               Our <i>SemLayoutDiff</i> generates scenes with fewer errors and respects architectural constraints by keeping furniture within room boundaries and maintaining clear spaces around doors (<i>red</i>) and windows (<i>pink</i>), whereas DiffuScene and MiDiffusion do not.
             </p>
             <div style="text-align: center;">
-              <img src="./static/images/model.png">
+              <img src="./static/images/model.png" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 10px;">
             </div>
           </div>
         </div> 
@@ -275,7 +281,7 @@
 
         <h3 class="title is-3">Results</h3>
 
-        <div class="content has-text-justified">
+        <!-- <div class="content has-text-justified">
           <h4 class="title is-4">Comparison with Prior Methods</h4>
           <p>
             Comparison of generated scenes using different methods with <i>arch mask conditioning</i>. 
@@ -286,6 +292,17 @@
         </div>
         <div style="text-align: center;">
           <img src="./static/images/qua-compare-arch.png">
+        </div> -->
+        
+        <div class="content has-text-justified">
+          <h4 class="title is-4">Qualitative Results</h4>
+          <p>
+            Examples of generated scenes using our <i>SemLayoutDiff</i> mixed-condition model under different condition types from top-down view with Blender rendering.
+            The condition room mask is shown on the top-left of each generated scene (for arch mask, door is <i style="color: red;">red</i> and window is <i style="color: pink;">pink</i>).
+          </p>
+        </div>
+        <div style="text-align: center;">
+          <img src="./static/images/qua-texture-mix.png">
         </div>
 
         <div class="content has-text-justified">
