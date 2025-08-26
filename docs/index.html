@@ -90,19 +90,18 @@
       padding: 0 1px;
     }
     
-    /* Image cropping styles to remove white space */
+    /* Image container styles without cropping */
     .image-container {
-      overflow: hidden;
       width: 100%;
       position: relative;
     }
     
-    .cropped-image {
-      width: 170%;
+    .original-image {
+      width: 100%;
       height: auto;
-      margin-left: -20%;
-      margin-right: -50%;
       display: block;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
   </style>
 
@@ -314,42 +313,42 @@
           <div class="columns is-multiline">
             <div class="column is-3">
               <div class="image-container">
-                <img src="./static/images/sample_1.webp" alt="Sample 1" class="cropped-image">
+                <img src="./static/images/sample_1.webp" alt="Sample 1" class="original-image">
               </div>
             </div>
             <div class="column is-3">
               <div class="image-container">
-                <img src="./static/images/sample_4.webp" alt="Sample 2" class="cropped-image">
+                <img src="./static/images/sample_4.webp" alt="Sample 2" class="original-image">
               </div>
             </div>
             <div class="column is-3">
               <div class="image-container">
-                <img src="./static/images/sample_3.webp" alt="Sample 3" class="cropped-image">
+                <img src="./static/images/sample_3.webp" alt="Sample 3" class="original-image">
               </div>
             </div>
             <div class="column is-3">
               <div class="image-container">
-                <img src="./static/images/sample_2.webp" alt="Sample 4" class="cropped-image">
+                <img src="./static/images/sample_2.webp" alt="Sample 4" class="original-image">
               </div>
             </div>
             <div class="column is-3">
               <div class="image-container">
-                <img src="./static/images/sample_5.webp" alt="Sample 5" class="cropped-image">
+                <img src="./static/images/sample_5.webp" alt="Sample 5" class="original-image">
               </div>
             </div>
             <div class="column is-3">
               <div class="image-container">
-                <img src="./static/images/sample_6.webp" alt="Sample 6" class="cropped-image">
+                <img src="./static/images/sample_6.webp" alt="Sample 6" class="original-image">
               </div>
             </div>
             <div class="column is-3">
               <div class="image-container">
-                <img src="./static/images/sample_7.webp" alt="Sample 7" class="cropped-image">
+                <img src="./static/images/sample_7.webp" alt="Sample 7" class="original-image">
               </div>
             </div>
             <div class="column is-3">
               <div class="image-container">
-                <img src="./static/images/sample_8.webp" alt="Sample 8" class="cropped-image">
+                <img src="./static/images/sample_8.webp" alt="Sample 8" class="original-image">
               </div>
             </div>
           </div>
