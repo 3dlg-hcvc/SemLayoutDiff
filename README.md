@@ -181,10 +181,11 @@ python scripts/eval.py --config <path_to_eval_config>
 If you find this work useful, please consider citing our paper:
 
 ```bibtex
-@article{sun2024semlayoutdiff,
-  title={SemLayoutDiff: Semantic Layout Diffusion for 3D Indoor Scene Generation},
-  author={Sun, Xiaohao and Goel, Divyam and Chang, Angel X.},
-  journal={arXiv preprint arXiv:2508.18597},
-  year={2025}
+@article{sun2025semlayoutdiff,
+  title={{SemLayoutDiff}: Semantic Layout Generation with Diffusion Model for Indoor Scene Synthesis}, 
+  author={Xiaohao Sun and Divyam Goel and Angle X. Chang},
+  year={2025},
+  eprint={2508.18597},
+  archivePrefix={arXiv},
 }
 ```
