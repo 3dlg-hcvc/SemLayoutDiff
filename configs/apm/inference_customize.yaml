@@ -1,0 +1,117 @@
+# Configuration for customized inference on custom floor plan samples
+# Based on unified_config.yaml but adapted for custom samples
+
+# Training data directories (inherited from base config)
+train_data_dir: ./datasets/unified_w_arch_3dfront/train
+val_data_dir: ./datasets/unified_w_arch_3dfront/val
+test_data_dir: ./datasets/unified_w_arch_3dfront/val
+
+# Project settings
+project: unified_attr_pred_V1_custom
+name: custom_inference_V1.0
+batch_size: 4
+
+# Model configuration
+model:
+  floor_id: 1
+  num_orientation_class: 4
+  num_categories: 36
+  embedding_dim: 128
+  semantic_encoder:
+    conv1: 32
+    conv2: 64
+    conv3: 128
+    attn_dim: 64
+  prediction_network:
+    fc1: 128
+    fc2: 64
+  attn_dim: 64
+
+# Training configuration (not used for inference but required)
+trainer:
+  lr: 1e-4
+  max_epochs: 100
+  l1_lambda: 0
+  l2_lambda: 1e-3
+
+# Loss weights (not used for inference but required)
+loss_weights:
+  size: 0.2
+  offset: 0.01
+  orient: 1
+
+# Image dimensions
+image_width: 1200
+image_height: 1200
+
+# Color palette for visualization
+color_palette_path: preprocess/scripts/config/color_palette.json
+idx_to_label_path: preprocess/scripts/config/unified_idx_to_generic_label.json
+
+# Inference settings
+debug: False  # Set to True for verbose output and debugging information
+resume_training: False
+for_scenestate: True
+
+# Model checkpoint
+checkpoint_path: checkpoints/apm_checkpoint.ckpt
+checkpoint_dir: checkpoints
+checkpoint_save_top_k: 2
+
+# Data paths
+eval_data_dir: ./datasets/filtered_3dfront_data_bedroom_V1/val
+new_label_to_generic_label_path: preprocess/metadata/unified_idx_to_generic_label.json
+pix_ratio_threshold: preprocess/metadata/unified_pix_ratio_threshold.json
+
+# Custom sample settings - UPDATE THESE PATHS AS NEEDED
+custom_samples_dir: "datasets/results/custom_arch_samples_V0/bedroom_using_bedroom_arch"
+custom_output_dir: "datasets/results/custom_arch_bedroom_V0"
+
+# Output settings
+output_dir: datasets/results_custom
+room_type: unified
+version: custom_V1
+
+# Baseline method settings
+baseline_method:
+majority_orientation_class: 2
+category_majority_json_path: ./datasets/front_3d_with_improved_mat/category_major_orient.json
+
+# Evaluation settings
+eval:
+  room_type: unified
+  tolerance: 5
+
+# Scene state configuration
+scenestate:
+  image_width: 1200
+  image_height: 1200
+  floor_size: 12
+  bbox: False
+  
+  # Visualization options
+  use_gt: False
+  use_pred: True
+  retrieve_3d: False
+  valid_inst_threshold: 0.001
+  category_orient: False
+  face_inwards: False
+  process_gt: False
+  w_floor: True
+  process_prior_bbox: False
+  no_floor: False
+  w_arch: True   # Enable to use custom floor plans
+  midiffusion: False
+  
+  # File paths - update these to match your local data structure
+  data_dir: datasets/results/custom_arch_bedroom_V0
+  filtered_data_dir: datasets/unified_w_arch_3dfront
+  generated_data_dir: datasets/results/custom_arch_bedroom_V0/generate_anno_custom_unified_custom_V1
+  room_split: preprocess/metadata/bedroom_threed_front_splits.csv
+  gt_obj_info_path: datasets/filtered_3dfront_data_V4
+  path_to_pickled_3d_futute_models: datasets/threed_future_model_unified.pkl
+  path_to_pickled_3d_futute_models_livingroom: datasets/threed_future_model_unified.pkl
+  new_label_to_generic_label_path: preprocess/metadata/unified_idx_to_generic_label.json
+  pix_ratio_threshold: preprocess/metadata/unified_pix_ratio_threshold.json
+  output_dir: datasets/results/custom_arch_bedroom_V0/scenestatef
+  floor_plan_dir: datasets/results/custom_arch_bedroom_V0/converted_floor_plans

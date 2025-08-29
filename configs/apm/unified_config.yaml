@@ -1,0 +1,81 @@
+train_data_dir: ./datasets/unified_w_arch_3dfront/train
+val_data_dir: ./datasets/unified_w_arch_3dfront/val
+test_data_dir: ./datasets/unified_w_arch_3dfront/val
+project: unified_attr_pred_V1
+name: V1.0
+batch_size: 4
+model:
+  floor_id: 1
+  num_orientation_class: 4
+  num_categories: 38
+  embedding_dim: 128
+  semantic_encoder:
+    conv1: 32
+    conv2: 64
+    conv3: 128
+    attn_dim: 64
+  prediction_network:
+    fc1: 128
+    fc2: 64
+  attn_dim: 64
+trainer:
+  lr: 1e-4
+  max_epochs: 100
+  l1_lambda: 0
+  l2_lambda: 1e-3
+loss_weights:
+  size: 0.2
+  offset: 0.01
+  orient: 1
+image_width: 1200
+image_height: 1200
+
+debug: True
+resume_training: False
+for_scenestate: True
+#checkpoint_path: scripts/attr_pred/outputs/checkpoints/test/epoch=2967-step=2968.ckpt
+checkpoint_path: checkpoints/apm_checkpoint.ckpt
+checkpoint_dir: checkpoints
+checkpoint_save_top_k: 2
+eval_data_dir: ./datasets/filtered_3dfront_data_bedroom_V1/val
+new_label_to_generic_label_path: preprocess/metadata/unified_idx_to_generic_label.json
+output_dir: datasets/results/generate_anno/mix_arch_diningroom
+pix_ratio_threshold: preprocess/metadata/unified_pix_ratio_threshold.json
+
+semantic_map_dir: datasets/results/sample_mix_arch_diningroom
+room_type: diningroom
+version: V1
+
+
+eval:
+  room_type: dining
+  tolerance: 5
+
+scenestate:
+  image_width: 1200
+  image_height: 1200
+  floor_size: 12
+  bbox: False
+  # vis options
+  use_gt: False
+  use_pred: True
+  retrieve_3d: False
+  valid_inst_threshold: 0.001
+  category_orient: False
+  face_inwards: False
+  process_gt: False
+  w_floor: True
+  process_prior_bbox: False
+  no_floor: False
+  w_arch: True
+  midiffusion: False
+
+  # Data file paths - update these to match your local data structure
+  data_dir: datasets/results/sample_mix_arch_diningroom
+  filtered_data_dir: datasets/unified_w_arch_3dfront
+  room_split: preprocess/metadata/bedroom_threed_front_splits.csv
+  path_to_pickled_3d_futute_models: datasets/threed_future_model_unified.pkl
+  new_label_to_generic_label_path: preprocess/metadata/unified_idx_to_generic_label.json
+  pix_ratio_threshold: preprocess/metadata/unified_pix_ratio_threshold.json
+  output_dir: datasets/results/scenestate/mix_arch_diningroom
+  floor_plan_dir: datasets/results/condition/arch/diningroom

@@ -1,0 +1,57 @@
+# Unified Configuration for Layout Sampling
+# This config supports both original Front3D data and custom floor plans
+# Update all paths below to match your local setup
+
+# Model and checkpoint - update path to your trained model
+model: checkpoints/sldn_checkpoints
+
+# Data mode selection - set to true to use custom floor plans, false for original data
+use_custom_data: false
+
+# === ORIGINAL DATA MODE SETTINGS ===
+# Used when use_custom_data: false
+samples: 5
+nrow: 4
+seed: 0
+double: false
+save_grid: false
+room_type: "unified"
+out_dir: "datasets/results/sample_unified_mix_test_arch"
+floor_plan_dir: "datasets/results/arch_plan"
+
+# === CUSTOM DATA MODE SETTINGS ===
+# Used when use_custom_data: true
+samples_per_floor: 1  # Number of samples to generate per custom floor plan
+custom_floor_dir: "datasets/results/custom_floor_plans/bedroom_arch"
+save_composite_maps: true
+
+# === COMMON SETTINGS ===
+# Color and label configuration - standardized paths
+color_palette_path: "preprocess/metadata/color_palette.json"
+idx_to_label_dir: "preprocess/metadata"
+
+# Room type settings
+room_type_condition: true
+sample_room_type: 1  # 0=bedroom, 1=livingroom, 2=diningroom
+
+# Floor plan and architecture settings
+w_arch: true  # Set to true if using architectural elements (doors/windows)
+wo_room: false 
+
+# Conditioning settings
+text_condition: false
+mixed_condition: true
+condition_type: floor  # Options: "uncon", "floor", "arch"
+
+# === EXAMPLES ===
+# Example 1: Original data sampling
+# use_custom_data: false
+# samples: 10
+# condition_type: "arch"
+# sample_room_type: 1
+
+# Example 2: Custom floor plan sampling
+# use_custom_data: true
+# custom_floor_dir: "../path/to/custom/floor/plans"
+# samples_per_floor: 3
+# condition_type: "floor"

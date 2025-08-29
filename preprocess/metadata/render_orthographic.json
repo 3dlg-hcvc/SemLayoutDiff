@@ -1,0 +1,8 @@
+{
+  "camera": {
+    "type": "orthographic",
+    "fov": 45
+  },
+  "width": 256,
+  "height": 256
+}

@@ -1,0 +1,41 @@
+# Example configuration file for unified evaluation pipeline
+# Modify the paths below to match your data directories
+
+# General settings
+output_directory: 'evaluation_results'
+verbose: true
+
+# Control which evaluations to run
+run_oob: true
+run_sca: true
+run_fid: true
+run_kl: true
+
+# Out-of-Boundary (OOB) Evaluation Settings
+oob:
+  input_folder: 'datasets/results/scenestate/mix_arch_bedroom'
+
+# Scene Classification Accuracy (SCA) Evaluation Settings
+sca:
+  path_to_train_renderings: 'datasets/results/rendering/gt/bedroom/train_val_semantic'
+  path_to_test_renderings: 'datasets/results/rendering/gt/bedroom/test_semantic'
+  path_to_synthesized_renderings: 'datasets/mixed_con_results/renderings/mix_arch/bedroom'
+  batch_size: 256
+  num_workers: 0
+  epochs: 10
+  device: null  # auto-detect (use 'cuda' or 'cpu' to force)
+
+# FID/KID Evaluation Settings
+fid:
+  path_to_real_renderings: 'datasets/results/rendering/gt/bedroom/test_semantic'
+  path_to_synthesized_renderings: 'datasets/mixed_con_results/renderings/mix_arch/bedroom'
+  device: null  # auto-detect
+  num_iterations: 10
+  temp_dir_base: null  # use system temp directory
+
+# KL Divergence Evaluation Settings
+kl:
+  gt_scenestate_dir: 'datasets/results/scenestate_gt/bedroom/test'
+  synthesized_scenestate_dir: 'datasets/mixed_con_results/scenestate/mix_arch_bedroom'
+  create_plot: true
+  class_labels: null  # use default class labels

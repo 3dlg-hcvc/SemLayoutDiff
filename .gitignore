@@ -1,0 +1,41 @@
+__pycache__/
+
+# =============================================================================
+# IDEs and Editors
+# =============================================================================
+.idea/
+.vscode/
+
+# =============================================================================
+# Machine Learning / AI Development
+# =============================================================================
+lightning_logs/
+outputs/
+wandb/
+*.egg-info/
+
+# =============================================================================
+# Project-Specific: SemLayoutDiff
+# =============================================================================
+*.log
+# Temporary and log files
+tmp_log/
+temp*
+tmp_scene_state.json
+
+# Dataset directories (existing)
+datasets/
+checkpoints/
+
+# Preprocessing outputs (existing paths)
+preprocess/scripts/config/
+preprocess/scripts/vis_configs/
+preprocess/scripts/glove.6B.50d.txt
+preprocessed/
+
+# Scripts outputs (existing paths)
+scripts/visualization/config/
+scripts/tmp_log/
+
+# Archive directory (existing)
+_Archive/

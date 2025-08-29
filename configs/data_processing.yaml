@@ -1,0 +1,27 @@
+# Data Processing Configuration
+# Configuration for processing scene data and generating visualizations
+
+debug: False
+image_width: 1200
+image_height: 1200
+floor_size: 12
+bbox: False
+
+# Visualization options
+use_gt: True
+use_pred: False
+retrieve_3d: False
+valid_inst_threshold: 0.001
+process_gt: True
+w_floor: False
+no_floor: False
+w_arch: False
+
+# Configuration file paths - update these to match your setup
+pix_ratio_threshold: preprocess/metadata/unified_pix_ratio_threshold.json
+new_label_to_generic_label_path: preprocess/metadata/unified_idx_to_generic_label_w_arch.json
+
+# Output directory - specify where results should be saved
+output_dir: datasets/results/scenestate_gt_square_floor/livingroom/val 
+
+

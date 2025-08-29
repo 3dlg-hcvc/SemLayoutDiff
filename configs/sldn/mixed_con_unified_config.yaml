@@ -1,0 +1,25 @@
+eval_every: 1
+check_every: 25
+epochs: 1000
+diffusion_steps: 4000
+dataset: front3d
+batch_size: 48
+dp_rate: 0.1
+augmentation: shift
+lr: 0.0001
+warmup: 5
+data_dir: unified_w_arch
+project: mixed_con_unified_test
+name: 
+num_categories: 38
+data_size: 120
+log_wandb: true
+specific_room_type:
+floor_plan: true
+w_arch: true 
+room_type_condition: true
+text_condition: false
+log_samples: true
+sample_every: 20
+num_samples: 4
+mix_condition: true
