@@ -131,13 +131,6 @@ python scripts/train_sldn.py --config configs/sldn/mixed_con_unified_config.yaml
 - **`datasets/unified_w_arch_120x120.npy`** - This file is essential for SLDN training
 - The config uses `data_dir: unified_w_arch` and `data_size: 120` which corresponds to this file
 
-**Configuration Options:**
-- Training configurations are located in [`configs/sldn/`](./configs/sldn)
-- Key configs for training:
-  - `mixed_con_unified_config.yaml`: Main training configuration with mixed conditioning
-  - `archcon_unified_config.yaml`: Architecture conditioning configuration
-- Update `data_dir` in config files if the `.npy` file location differs
-
 ### Training APM
 
 Train the attribute prediction model to map semantic layouts to 3D scenes:
@@ -145,14 +138,6 @@ Train the attribute prediction model to map semantic layouts to 3D scenes:
 ```bash
 python scripts/train_apm.py --config-path=../configs/apm --config-name=unified_config
 ```
-
-**Configuration Options:**
-- Training configurations are located in [`configs/apm/`](./configs/apm)
-- Key paths to update in `configs/apm/unified_config.yaml`:
-  - `train_data_dir`: `./datasets/unified_w_arch_3dfront/train`
-  - `val_data_dir`: `./datasets/unified_w_arch_3dfront/val`
-  - `new_label_to_generic_label_path`: `preprocess/metadata/unified_idx_to_generic_label.json`
-  - `pix_ratio_threshold`: `preprocess/metadata/unified_pix_ratio_threshold.json`
 
 ## 🎨 Scene Generation
 
@@ -164,21 +149,7 @@ Generate 2D semantic maps using the trained SLDN:
 
 ```bash
 python scripts/sample_layout.py \
-    --checkpoint checkpoints/sldn_checkpoints/check/checkpoint.pt \
-    --config configs/sldn/sample_layout.yaml \
-    --num_samples 20 \
-    --room_type <bedroom|livingroom|diningroom> \
-    --output_dir datasets/results/semantic_layouts
 ```
-
-**Parameters:**
-- `--checkpoint`: Path to trained SLDN model (use pretrained or your trained model)
-- `--config`: Use `configs/sldn/sample_layout.yaml` for unified room generation
-- `--room_type`: Type of room to generate (bedroom, livingroom, diningroom)
-- For room-specific configs, use:
-  - `configs/sldn/mixed_condition/sample_layout_arch_bedroom.yaml`
-  - `configs/sldn/mixed_condition/sample_layout_arch_livingroom.yaml`
-  - `configs/sldn/mixed_condition/sample_layout_arch_diningroom.yaml`
 
 #### 2. 3D Scene Generation
 
