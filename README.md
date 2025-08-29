@@ -148,7 +148,7 @@ python scripts/train_apm.py --config-path=../configs/apm --config-name=unified_c
 Generate 2D semantic maps using the trained SLDN:
 
 ```bash
-python scripts/sample_layout.py \
+python scripts/sample_layout.py
 ```
 
 #### 2. 3D Scene Generation
@@ -156,12 +156,7 @@ python scripts/sample_layout.py \
 Convert semantic layouts to full 3D scenes with the APM:
 
 ```bash
-python scripts/inference.py \
-    --config configs/apm/unified_config.yaml \
-    --checkpoint checkpoints/apm_checkpoint.ckpt \
-    semantic_map_dir=datasets/results/semantic_layouts \
-    room_type=<room_type> \
-    output_dir=datasets/results/3d_scenes
+python scripts/inference.py
 ```
 
 **Parameters:**
