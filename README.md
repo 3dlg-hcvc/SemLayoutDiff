@@ -185,6 +185,6 @@ If you find this work useful, please consider citing our paper:
   title={SemLayoutDiff: Semantic Layout Diffusion for 3D Indoor Scene Generation},
   author={Sun, Xiaohao and Goel, Divyam and Chang, Angel X.},
   journal={arXiv preprint arXiv:2508.18597},
-  year={2024}
+  year={2025}
 }
 ```
