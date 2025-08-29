@@ -165,7 +165,7 @@ python scripts/inference.py
 - `--checkpoint`: Path to trained APM model (use pretrained or your trained model)
 - For custom data inference, use `configs/apm/inference_customize.yaml`
 
-**Output:** Generated 3D scenes are saved as JSON files containing object positions, orientations, scales, and semantic categories.
+**Output:** Generated 3D scenes are saved as JSON files containing object positions, orientations, scales, and semantic categories. The rendering instruction to render the scenestate file with our STK will be released soon!
 
 ## 📈 Evaluation
 
