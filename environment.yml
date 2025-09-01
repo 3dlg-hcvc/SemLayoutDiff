@@ -1,0 +1,55 @@
+name: semlayoutdiff
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+  - nvidia
+dependencies:
+  - python=3.11
+  - pip=23.1.2
+  - setuptools
+  - numpy
+  - scipy
+  - networkx=2.8.4
+  - scikit-image
+  - imageio
+  - pywavelets
+  - pyyaml
+  - pytorch==2.4.1
+  - torchvision==0.19.1
+  - torchaudio==2.4.1
+  - pytorch-cuda=12.1
+  - pip:
+    - trimesh
+    - tqdm
+    - vtk
+    - seaborn
+    - opencv-python
+    - simple_3dviz
+    - einops
+    - tensorboard
+    - prettytable
+    - wandb 
+    - pytorch-lightning
+    - hydra-core
+    - shapely
+    - transformers
+    - compress_json
+    - Flask==2.3.3
+    - moviepy==1.0.3
+    - langchain-openai
+    - sentence-transformers
+    - langchain
+    - colorama
+    - langchain-community
+    - compress_pickle
+    - rtree
+    - cvxpy
+    - procthor
+    - -e git+https://github.com/smartscenes/libsg.git#egg=libsg
+    - editdistance
+    - openai==1.12.0
+    - langchain-openai==0.0.8
+    - langchain==1.16
+    
+    
