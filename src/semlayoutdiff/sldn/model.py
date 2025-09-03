@@ -1,5 +1,5 @@
 import torch
-from diffusion_utils.diffusion_multinomial import MultinomialDiffusion
+from semlayoutdiff.sldn.diffusion_utils.diffusion_multinomial import MultinomialDiffusion
 from semlayoutdiff.sldn.layers.layers import SegmentationUnet
 # from .layers.layers_voxel import SegmentationUnet
 

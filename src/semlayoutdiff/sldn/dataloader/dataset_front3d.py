@@ -96,7 +96,7 @@ def get_data(args):
             # old checkpoint has different args structure
             args.data_dir = args.room_type
             args.specific_room_type = None
-        train = Front3DFast(root="datasets", split=args.data_dir,
+        train = Front3DFast(root="datasets", split="unified_w_arch",
                             resolution=(args.data_size, args.data_size),
                             transform=pil_transforms, floor_plan=args.floor_plan, wo_floor=args.wo_floor,
                             room_type_condition=args.room_type_condition, w_arch=args.w_arch, specific_room_type=args.specific_room_type, 
