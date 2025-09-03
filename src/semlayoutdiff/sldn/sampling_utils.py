@@ -27,7 +27,7 @@ from omegaconf import DictConfig
 from .dataloader.front3d.front3d_fast import Front3DFast
 from .dataloader.dataset_front3d import get_data
 from .model import get_model
-from diffusion_utils.base import DataParallelDistribution
+from semlayoutdiff.sldn.diffusion_utils.base import DataParallelDistribution
 
 
 class ImageProcessor:

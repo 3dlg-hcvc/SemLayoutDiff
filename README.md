@@ -58,15 +58,15 @@ We provide pretrained weights for both model components to enable quick scene ge
 **Setup:**
 ```bash
 # Create checkpoints directory
-mkdir -p checkpoints
+mkdir -p checkpoints && cd checkpoints
 
 # Download and extract pretrained weights
 # SLDN weights
 wget [SLDN_DOWNLOAD_LINK] -O checkpoints/sldn_checkpoints.tar.gz
-tar -xf checkpoints/sldn_checkpoints.tar.gz
+tar -xf sldn_checkpoints.tar.gz
 
 # APM weights  
-wget [APM_DOWNLOAD_LINK] -O checkpoints/apm_checkpoints.ckpt
+wget [APM_DOWNLOAD_LINK] -O apm_checkpoints.ckpt
 ```
 
 ## 📊 Dataset Preparation
@@ -81,7 +81,7 @@ Download our preprocessed datasets to get started immediately:
 # Create datasets directory and download processed data
 mkdir -p datasets && cd datasets
 wget [DOWNLOAD_LINK] -O 3dfront_processed.tar.gz
-tar -xzf 3dfront_processed.tar.gz && cd ..
+tar -xzf 3dfront_processed.tar.gz --strip-components=1 && cd ..
 ```
 
 **Download Link:** [3D-FRONT Processed Dataset](https://aspis.cmpt.sfu.ca/projects/semdifflayout/data/3dfront_processed.tar.gz)
