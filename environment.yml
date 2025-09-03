@@ -39,7 +39,7 @@ dependencies:
     - moviepy==1.0.3
     - langchain-openai
     - sentence-transformers
-    - langchain
+    - langchain==1.16
     - colorama
     - langchain-community
     - compress_pickle
@@ -50,6 +50,5 @@ dependencies:
     - editdistance
     - openai==1.12.0
     - langchain-openai==0.0.8
-    - langchain==1.16
     
     
