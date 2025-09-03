@@ -71,6 +71,8 @@ wget [APM_DOWNLOAD_LINK] -O checkpoints/apm_checkpoints.ckpt
 
 ## 📊 Dataset Preparation
 
+Our processed datasets are built on the [3D-FRONT](https://tianchi.aliyun.com/dataset/65347) and [3D-FUTURE](https://tianchi.aliyun.com/dataset/65347) datasets, providing comprehensive 3D indoor scene layouts and furniture models for training and evaluation.
+
 ### Quick Start (Recommended)
 
 Download our preprocessed datasets to get started immediately:
