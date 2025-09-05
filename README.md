@@ -167,7 +167,38 @@ python scripts/inference.py
 - `--checkpoint`: Path to trained APM model (use pretrained or your trained model)
 - For custom data inference, use `configs/apm/inference_customize.yaml`
 
-**Output:** Generated 3D scenes are saved as JSON files containing object positions, orientations, scales, and semantic categories. The rendering instruction to render the scenestate file with our STK will be released soon!
+**Output:** Generated 3D scenes are saved as JSON files containing object positions, orientations, scales, and semantic categories.
+
+## 🎨 Scene Rendering
+
+Render generated scenes using the [SmartScenes ToolKit (SSTK)](https://github.com/smartscenes/sstk) for visualization and quantitative evaluation.
+
+### Setup
+
+1. **Install SSTK** following the instructions in their [repository](https://github.com/smartscenes/sstk)
+2. **Prepare 3D-FRONT metadata** from [sstk-metadata](https://github.com/smartscenes/sstk-metadata) following their README setup instructions
+
+### Render Semantic Top-Down Views
+
+```bash
+NODE_BASE_URL=<your_root_path> ~/path/to/sstk/ssc/render-file.js \
+  --assetType scene \
+  --assetGroups 3dfModel,3dfTexture \
+  --input datasets/results/scenestate_files/your_scene.json \
+  --output_dir rendered_scenes \
+  --color_by objectType \
+  --index preprocess/metadata/semantic_color_index_livingdiningroom.csv \
+  --restrict_to_color_index \
+  --assetInfo '{"archOptions":{"includeWallHoleBoundingBoxes":true}}'
+```
+
+**Parameters:**
+- `--input`: Path to generated scenestate JSON file
+- `--index`: Semantic color mapping (use `semantic_color_index_bedroom.csv` for bedroom scenes)
+- `--output_dir`: Directory for rendered outputs
+- `--assetInfo`: Includes walls and doors in rendering with architectural options
+
+The semantic color indices are provided in `preprocess/metadata/` for different room types.
 
 ## 📈 Evaluation
 
@@ -177,6 +208,8 @@ Evaluate generated scenes using standard metrics:
 # Evaluate semantic layout quality
 python scripts/eval.py --config <path_to_eval_config>
 ```
+
+
 
 ## 🎯 Citation
 
