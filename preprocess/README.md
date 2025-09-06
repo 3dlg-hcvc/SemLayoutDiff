@@ -23,7 +23,7 @@ We leverage [BlenderProc-3DFront](https://github.com/yinyunie/BlenderProc-3DFron
 ## Setup
 
 ### 1. Environment Setup
-Create and activate the conda environment:
+Create and activate the conda environment (if you did not already create it, follow the main README):
 ```bash
 # From the project root directory
 conda env create -f environment.yml
