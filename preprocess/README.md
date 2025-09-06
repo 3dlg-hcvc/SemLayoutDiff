@@ -5,8 +5,8 @@ This directory contains preprocessing tools for the 3D-FRONT and 3D-FUTURE datas
 ## Overview
 
 Our preprocessing pipeline creates two main types of data:
-1. **Visual maps**: Semantic layout maps and room architecture maps (PNG format)
-2. **Metadata**: Object instance information (JSON format)
+1. Semantic layout maps and room architecture maps (PNG format)
+2. Object instance information (JSON format)
 
 We leverage [BlenderProc-3DFront](https://github.com/yinyunie/BlenderProc-3DFront) to process 3D-FRONT scenes into top-down view renders.
 
