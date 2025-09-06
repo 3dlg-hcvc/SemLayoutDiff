@@ -110,8 +110,7 @@ datasets/
 
 ### Alternative: Process Your Own Data
 
-For custom processing, we will release the instruction and code soon.
-
+For custom processing, see detailed instructions in [`preprocess/README.md`](./preprocess/README.md).
 
 
 ## 🏋️ Model Training
