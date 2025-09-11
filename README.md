@@ -17,7 +17,6 @@
 <p align="center">
   <a href="https://3dlg-hcvc.github.io/SemLayoutDiff/">🌐 Project Website</a> | 
   <a href="https://arxiv.org/abs/2508.18597v1">📄 Paper</a> | 
-  <a href="#">🎮 Demo</a>
 </p>
 
 <p align="center">
@@ -217,7 +216,7 @@ If you find this work useful, please consider citing our paper:
 ```bibtex
 @article{sun2025semlayoutdiff,
   title={{SemLayoutDiff}: Semantic Layout Generation with Diffusion Model for Indoor Scene Synthesis}, 
-  author={Xiaohao Sun and Divyam Goel and Angle X. Chang},
+  author={Xiaohao Sun and Divyam Goel and Angel X. Chang},
   year={2025},
   eprint={2508.18597},
   archivePrefix={arXiv},
