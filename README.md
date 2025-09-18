@@ -23,6 +23,34 @@
   <img src="docs/static/images/teaser.png" alt="SemLayoutDiff Teaser" width="100%"/>
 </p>
 
+## 📋 Table of Contents
+
+- [🔍 Overview](#-overview)
+- [🚀 Quick Start](#-quick-start)
+- [📦 Pretrained Weights](#-pretrained-weights)
+- [📊 Dataset Preparation](#-dataset-preparation)
+- [🏋️ Model Training](#️-model-training)
+- [🎨 Scene Generation](#-scene-generation)
+- [🎨 Scene Rendering](#-scene-rendering)
+- [📈 Evaluation](#-evaluation)
+- [🎯 Citation](#-citation)
+- [🙏 Acknowledgements](#-acknowledgements)
+
+
+## 🔍 Overview
+
+SemLayoutDiff is a two-stage approach to generate realistic 3D indoor scenes condition on room type and room architecture mask. Our method combines semantic layout generation with attribute prediction to create complete 3D rooms.
+
+### 🏗️ Architecture
+
+Our approach consists of two main components:
+
+1. **Semantic Layout Diffusion Network (SLDN)**: Generates 2D semantic layout maps from room type conditioning using a diffusion process using discrete diffsion model.
+
+2. **Attribute Prediction Model (APM)**: Takes the generated 2D semantic layouts and predicts full 3D object attributes including positions, orientations, and scales for each instance. 
+
+After the above two stage, we adopt object retrieval based on the object category and size to construct the complete 3D scene.
+
 
 ## 🚀 Quick Start
 
@@ -70,11 +98,19 @@ wget [APM_DOWNLOAD_LINK] -O apm_checkpoints.ckpt
 
 ## 📊 Dataset Preparation
 
-Our processed datasets are built on the [3D-FRONT](https://tianchi.aliyun.com/dataset/65347) and [3D-FUTURE](https://tianchi.aliyun.com/dataset/65347) datasets, providing comprehensive 3D indoor scene layouts and furniture models for training and evaluation.
+### 🎯 What Data Do You Need?
+
+The data requirements depend on your use case:
+
+| **Use Case** | **Required Data** | **Description** |
+|--------------|-------------------|-----------------|
+| **🎨 Scene Generation Only** (using pretrained models) | `threed_future_model_unified.pkl` | 3D furniture model database for object retrieval |
+| **🏋️ Training SLDN** | `unified_w_arch_120x120.npy` | Preprocessed 2D semantic layouts for diffusion training |
+| **🏋️ Training APM** | `unified_w_arch_3dfront/`| 3D scene data with semantic maps and object attributes |
 
 ### Quick Start (Recommended)
 
-Download our preprocessed datasets to get started immediately:
+**For most users**: Download our preprocessed datasets built on [3D-FRONT](https://tianchi.aliyun.com/dataset/65347) and [3D-FUTURE](https://tianchi.aliyun.com/dataset/65347):
 
 ```bash
 # Create datasets directory and download processed data
@@ -86,9 +122,9 @@ tar -xzf 3dfront_processed.tar.gz --strip-components=1 && cd ..
 **Download Link:** [3D-FRONT Processed Dataset](https://aspis.cmpt.sfu.ca/projects/semdifflayout/data/3dfront_processed.tar.gz)
 
 **What's included:**
-- SLDN training data (`unified_w_arch_120x120.npy`) 
-- APM training data (`unified_w_arch_3dfront/`)
-- 3D-FUTURE model database (`threed_future_model_unified.pkl`)
+- **`unified_w_arch_120x120.npy`**: SLDN training data (2D semantic layouts with room architecture)
+- **`unified_w_arch_3dfront/`**: APM training dataset (3D scenes with object attributes and semantic maps)
+- **`threed_future_model_unified.pkl`**: 3D-FUTURE model database (required for object retrieval during scene generation)
 
 **Note:** Data splits and metadata are included in the repository under `preprocess/metadata/` (no separate download needed).
 
@@ -107,9 +143,9 @@ datasets/
 ```
 </details>
 
-### Alternative: Process Your Own Data
+**Getting Started with Custom Processing:**
 
-For custom processing, see detailed instructions in [`preprocess/README.md`](./preprocess/README.md).
+For detailed instructions on processing your own data from raw 3D-FRONT datasets, see [`preprocess/README.md`](./preprocess/README.md).
 
 
 ## 🏋️ Model Training
@@ -119,6 +155,12 @@ Our approach consists of two main components that can be trained independently:
 1. **Semantic Layout Diffusion Network (SLDN)**: Generates 2D semantic maps from room type conditioning
 2. **Attribute Prediction Model (APM)**: Projects 2D semantic maps to full 3D object layouts with attributes
 
+### ⚙️ Configuration System
+
+Our training uses YAML configuration files in the `configs/` directory. For reproducing paper results, use:
+- **`configs/sldn/mixed_con_unified_config.yaml`** for SLDN training
+- **`configs/apm/unified_config.yaml`** for APM training
+
 ### Training SLDN
 
 Train the semantic layout diffusion model on 3D-FRONT dataset:
@@ -127,9 +169,11 @@ Train the semantic layout diffusion model on 3D-FRONT dataset:
 python scripts/train_sldn.py --config configs/sldn/mixed_con_unified_config.yaml
 ```
 
+Key parameters include `batch_size: 48`, `data_size: 120` for 120×120 semantic maps, and `num_categories: 38` object types. The model uses `room_type_condition: true` and `w_arch: true` to enable conditioning on both room types and architectural elements.
+
 **Requirements:**
-- **`datasets/unified_w_arch_120x120.npy`** - This file is essential for SLDN training
-- The config uses `data_dir: unified_w_arch` and `data_size: 120` which corresponds to this file
+- **`datasets/unified_w_arch_120x120.npy`** - Essential SLDN training data
+- GPU with ≥16GB memory for the default batch size
 
 ### Training APM
 
@@ -138,6 +182,10 @@ Train the attribute prediction model to map semantic layouts to 3D scenes:
 ```bash
 python scripts/train_apm.py --config-path=../configs/apm --config-name=unified_config
 ```
+
+**Requirements:**
+- **`datasets/unified_w_arch_3dfront/`** - Essential APM training data
+- **`datasets/threed_future_model_unified.pkl`** - 3D model database
 
 ## 🎨 Scene Generation
 
@@ -148,24 +196,22 @@ python scripts/train_apm.py --config-path=../configs/apm --config-name=unified_c
 Generate 2D semantic maps using the trained SLDN:
 
 ```bash
-python scripts/sample_layout.py
+python scripts/sample_layout.py --config configs/sldn/sample_layout.yaml
 ```
+
+Configure the script by editing `sample_layout.yaml`. Set `room_type` to `unified` and `sample_room_type` to 0, 1, or 2 for bedroom, dining room, and living room respectively. Use `samples: 5` to generate 5 layouts and `condition_type: "arch"` for architecture conditioning. Set `w_arch: true` to include doors/windows and specify `out_dir` for the output location.
 
 #### 2. 3D Scene Generation
 
 Convert semantic layouts to full 3D scenes with the APM:
 
 ```bash
-python scripts/inference.py
+python scripts/inference.py --config-path=../configs/apm --config-name=unified_config
 ```
 
-**Parameters:**
-- `semantic_map_dir`: Directory containing generated semantic layouts
-- `room_type`: Must match the room type used in semantic layout generation
-- `--checkpoint`: Path to trained APM model (use pretrained or your trained model)
-- For custom data inference, use `configs/apm/inference_customize.yaml`
+Modify `unified_config.yaml` to set `semantic_map_dir` to your generated layouts directory, `room_type` to match the layout room type (bedroom/livingroom/diningroom), and `output_dir` for results. The script uses `checkpoint_path` to load the trained APM model.
 
-**Output:** Generated 3D scenes are saved as JSON files containing object positions, orientations, scales, and semantic categories.
+**Output:** Generated 3D scenes are saved as JSON files containing object positions, orientations, scales, categories, and 3D model IDs for furniture retrieval.
 
 ## 🎨 Scene Rendering
 
@@ -198,14 +244,58 @@ NODE_BASE_URL=<your_root_path> ~/path/to/sstk/ssc/render-file.js \
 
 The semantic color indices are provided in `preprocess/metadata/` for different room types.
 
-## 📈 Evaluation
+<details>
+<summary><strong>Export Scene as GLB File</strong> (click to expand)</summary>
 
-Evaluate generated scenes using standard metrics:
+Export generated scenes as GLB (GL Transmission Format Binary) files for use in 3D applications:
 
 ```bash
-# Evaluate semantic layout quality
-python scripts/eval.py --config <path_to_eval_config>
+NODE_BASE_URL=<your_root_path> ~/path/to/sstk/ssc/export-mesh.js \
+  --assetType scene \
+  --assetGroups 3dfModel,3dfTexture \
+  --input datasets/results/scenestate_files/your_scene.json \
+  --input_type path \
+  --output_format glb \
+  --output_dir datasets \
+  --color_by objectType \
+  --index preprocess/metadata/semantic_color_index_livingdiningroom.csv \
+  --restrict_to_color_index \
+  --assetInfo '{"archOptions":{"includeWallHoleBoundingBoxes":true}}'
 ```
+
+**Parameters:**
+- `--input`: Path to generated scenestate JSON file
+- `--input_type`: Set to `path` for file path input
+- `--output_format`: Set to `glb` for GLB export format
+- `--output_dir`: Directory for exported GLB files
+- `--index`: Semantic color mapping (use `semantic_color_index_bedroom.csv` for bedroom scenes)
+- `--assetInfo`: Includes walls and doors in the exported model with architectural options
+
+The exported GLB files can be imported into Blender for better visualization.
+
+</details>
+
+
+
+## 📈 Evaluation
+
+Evaluate generated scenes using multiple quantitative metrics:
+
+```bash
+python scripts/eval.py --config configs/evaluation_config.yaml
+```
+
+The evaluation script computes four key metrics:
+
+**1. Out-of-Boundary (OOB) Rate**: Measures the percentage of generated objects that are placed outside the room boundaries or overlap with walls/architectural elements.
+
+**2. Scene Classification Accuracy (SCA)**: Trains a CNN classifier on real scene renderings and tests it on generated scenes to measure visual realism and scene coherence.
+
+**3. Fréchet Inception Distance (FID)**: Computes FID and KID scores between real and generated scene renderings to measure visual quality and diversity.
+
+**4. KL Divergence**: Measures the difference between object category distributions in real vs. generated scenes across 34 furniture types (beds, chairs, tables, etc.).
+
+For scene plausibility evaluation, please refer to [SceneEval](https://github.com/3dlg-hcvc/SceneEval).
 
 
 

@@ -184,7 +184,6 @@ class FurnitureAttributesModel(LightningModule):
         self.offset_mae = torchmetrics.MeanAbsoluteError()
 
         self.baseline_method = config.get('baseline_method', None)
-        self.majority_orientation_class = config.majority_orientation_class
         if self.baseline_method == 'category_majority':
             with open(config.category_majority_json_path, 'r') as file:
                 self.category_majority_mapping = json.load(file)
@@ -202,29 +201,7 @@ class FurnitureAttributesModel(LightningModule):
         combined_features = self.cross_attention(semantic_features, instance_features)
         size_pred, offset_pred, orient_pred = self.prediction_network(combined_features)
 
-        # Apply baseline method if specified
-        if self.baseline_method:
-            orient_pred = self.apply_baseline_orientation(category, instance_mask, orient_pred)
-
         return size_pred, offset_pred, orient_pred
-
-    def apply_baseline_orientation(self, category, instance_mask, orient_pred):
-        if self.baseline_method == 'random':
-            return torch.randint(0, 4, (orient_pred.size(0),))
-
-        elif self.baseline_method == 'majority':
-            majority_class = self.majority_orientation_class  # set this somewhere in your config or initialization
-            return torch.full((orient_pred.size(0),), majority_class, dtype=torch.long)
-
-        elif self.baseline_method == 'category_majority':
-            return torch.tensor([self.category_majority_mapping[str(cat.item())] for cat in category])
-
-        elif self.baseline_method == 'face_inward':
-            # Extract the centroid (x, y) of each object
-            centroids = self.calculate_centroids(instance_mask)
-            # Calculate the inward facing orientation for each object
-            orientations = [face_inward_orientation(x, y) for x, y in centroids]
-            return torch.tensor(orientations, dtype=torch.long, device=orient_pred.device)
 
     @staticmethod
     def calculate_centroids(instance_mask):
