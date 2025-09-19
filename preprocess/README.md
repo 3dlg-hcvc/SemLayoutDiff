@@ -120,5 +120,5 @@ python scripts/pickle_threed_front_dataset.py \
     --output_path <output_path>
 
 # Process 3D-FUTURE dataset
-python scripts/pickle_threed_future_dataset.py threed_front_<room_type>
+python scripts/json_threed_future_dataset.py threed_front_<room_type>
 ```
