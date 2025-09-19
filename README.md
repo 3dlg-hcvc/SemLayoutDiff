@@ -49,7 +49,7 @@ Our approach consists of two main components:
 
 2. **Attribute Prediction Model (APM)**: Takes the generated 2D semantic layouts and predicts full 3D object attributes including positions, orientations, and scales for each instance. 
 
-After the above two stage, we adopt object retrieval based on the object category and size to construct the complete 3D scene.
+After the above two stage, we perform object retrieval based on the object category and size to construct the complete 3D scene.
 
 
 ## 🚀 Quick Start
