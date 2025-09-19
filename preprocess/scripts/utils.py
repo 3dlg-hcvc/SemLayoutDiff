@@ -11,13 +11,14 @@ from threed_front.datasets.threed_front import ThreedFront
 PROJ_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 # Default input directories
-PATH_TO_DATASET_FILES = os.path.join(PROJ_DIR, "preprocess/scripts/config")
+PATH_TO_DATASET_FILES = os.path.join(PROJ_DIR, "preprocess/metadata")
 PATH_TO_FLOOR_PLAN_TEXTURES = os.path.join(PROJ_DIR, "preprocess/demo/floor_plan_texture_images")
 
 # Default parsed/preprocessed data directories (empty string is to be filed with room_type)
 PATH_TO_PICKLED_3D_FRONT_DATASET = os.path.join(PROJ_DIR, "datasets/output/threed_front_w_arch.pkl")
 PATH_TO_PICKLED_3D_FRONT_W_ARCH_DATASET = os.path.join(PROJ_DIR, "datasets/output/threed_front_w_arch.pkl")
 PATH_TO_PICKLED_3D_FUTURE_MODEL = os.path.join(PROJ_DIR, "datasets/output/threed_future_model_{}.pkl")
+PATH_TO_JSON_3D_FUTURE_MODEL = os.path.join(PROJ_DIR, "datasets/output/threed_future_model_{}.json")
 PATH_TO_PROCESSED_DATA = os.path.join(PROJ_DIR, "datasets/output/3d_front_processed/{}")
 
 
@@ -26,6 +27,12 @@ def load_pickled_threed_front(file_path, filter_fn=lambda s: s):
     scenes = pickle.load(open(file_path, "rb"))
     threed_front_dataset = ThreedFront([s for s in map(filter_fn, scenes) if s])
     return threed_front_dataset
+
+
+def load_threed_future_dataset(file_path):
+    """Load 3D Future dataset from either JSON or pickle format."""
+    from threed_front.datasets.threed_future_dataset import ThreedFutureDataset
+    return ThreedFutureDataset.from_dataset_file(file_path)
 
 
 def create_or_clear_output_dir(output_dir):

@@ -104,7 +104,7 @@ The data requirements depend on your use case:
 
 | **Use Case** | **Required Data** | **Description** |
 |--------------|-------------------|-----------------|
-| **🎨 Scene Generation Only** (using pretrained models) | `threed_future_model_unified.pkl` | 3D furniture model database for object retrieval |
+| **🎨 Scene Generation Only** (using pretrained models) | `threed_future_model_unified.json` | 3D furniture model database for object retrieval |
 | **🏋️ Training SLDN** | `unified_w_arch_120x120.npy` | Preprocessed 2D semantic layouts for diffusion training |
 | **🏋️ Training APM** | `unified_w_arch_3dfront/`| 3D scene data with semantic maps and object attributes |
 
@@ -124,7 +124,7 @@ tar -xzf 3dfront_processed.tar.gz --strip-components=1 && cd ..
 **What's included:**
 - **`unified_w_arch_120x120.npy`**: SLDN training data (2D semantic layouts with room architecture)
 - **`unified_w_arch_3dfront/`**: APM training dataset (3D scenes with object attributes and semantic maps)
-- **`threed_future_model_unified.pkl`**: 3D-FUTURE model database (required for object retrieval during scene generation)
+- **`threed_future_model_unified.json`**: 3D-FUTURE model database (required for object retrieval during scene generation)
 
 **Note:** Data splits and metadata are included in the repository under `preprocess/metadata/` (no separate download needed).
 
@@ -138,7 +138,7 @@ datasets/
 ├── unified_w_arch_120x120.npy                # SLDN training data (required!)
 ├── unified_w_arch_3dfront/                   # APM training dataset
 │   ├── train/val/test/                       # Scene data with .json/.png files
-├── threed_future_model_unified.pkl           # 3D-FUTURE models
+├── threed_future_model_unified.json           # 3D-FUTURE models
 └── results/                                  # Generated outputs
 ```
 </details>
@@ -185,7 +185,7 @@ python scripts/train_apm.py --config-path=../configs/apm --config-name=unified_c
 
 **Requirements:**
 - **`datasets/unified_w_arch_3dfront/`** - Essential APM training data
-- **`datasets/threed_future_model_unified.pkl`** - 3D model database
+- **`datasets/threed_future_model_unified.json`** - 3D model database
 
 ## 🎨 Scene Generation
 

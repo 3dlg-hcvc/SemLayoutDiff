@@ -25,6 +25,8 @@ tmp_scene_state.json
 
 # Dataset directories (existing)
 datasets/
+# Exception: allow preprocess/threed_front/datasets
+!preprocess/threed_front/datasets/
 checkpoints/
 
 # Preprocessing outputs (existing paths)

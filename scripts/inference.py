@@ -53,8 +53,8 @@ def load_model_and_datasets(cfg: DictConfig) -> Tuple[FurnitureAttributesModel, 
     new_label_to_generic_label = load_json(cfg.new_label_to_generic_label_path)
 
     # Load and prepare 3D objects dataset
-    objects_dataset = ThreedFutureDataset.from_pickled_dataset(
-        cfg.scenestate.path_to_pickled_3d_futute_models
+    objects_dataset = ThreedFutureDataset.from_dataset_file(
+        cfg.scenestate.path_to_json_3d_future_models
     )
     for obj in objects_dataset:
         obj.size = obj.size * 2

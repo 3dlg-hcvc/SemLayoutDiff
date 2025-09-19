@@ -7,7 +7,7 @@ batch_size: 4
 model:
   floor_id: 1
   num_orientation_class: 4
-  num_categories: 38
+  num_categories: 36
   embedding_dim: 128
   semantic_encoder:
     conv1: 32
@@ -75,7 +75,9 @@ scenestate:
   filtered_data_dir: datasets/unified_w_arch_3dfront
   room_split: preprocess/metadata/bedroom_threed_front_splits.csv
   path_to_pickled_3d_futute_models: datasets/threed_future_model_unified.pkl
+  path_to_json_3d_future_models: datasets/threed_future_model_unified.json
   new_label_to_generic_label_path: preprocess/metadata/unified_idx_to_generic_label.json
   pix_ratio_threshold: preprocess/metadata/unified_pix_ratio_threshold.json
   output_dir: datasets/results/scenestate/mix_arch_diningroom
+  output_path: datasets/results/scenestate/mix_arch_diningroom
   floor_plan_dir: datasets/results/condition/arch/diningroom
