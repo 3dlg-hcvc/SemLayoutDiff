@@ -79,8 +79,8 @@ pip install --extra-index-url https://ai2thor-pypi.allenai.org ai2thor==0+8524ea
 We provide pretrained weights for both model components to enable quick scene generation without training from scratch.
 
 **Download Links:**
-- **SLDN (Semantic Layout Diffusion Network)**: [link](https://aspis.cmpt.sfu.ca/projects/semdifflayout/checkpoints/sldn_checkpoints.tar.gz)
-- **APM (Attribute Prediction Model)**: [link](https://aspis.cmpt.sfu.ca/projects/semdifflayout/checkpoints/apm_checkpoint.ckpt)
+- **SLDN (Semantic Layout Diffusion Network)**: [link](https://huggingface.co/datasets/3dlg-hcvc/semlayoutdiff/resolve/main/weights/sldn_checkpoints.tar.gz)
+- **APM (Attribute Prediction Model)**: [link](https://huggingface.co/datasets/3dlg-hcvc/semlayoutdiff/resolve/main/weights/apm_checkpoint.ckpt)
 
 **Setup:**
 ```bash
@@ -119,7 +119,7 @@ wget [DOWNLOAD_LINK] -O 3dfront_processed.tar.gz
 tar -xzf 3dfront_processed.tar.gz --strip-components=1 && cd ..
 ```
 
-**Download Link:** [3D-FRONT Processed Dataset](https://aspis.cmpt.sfu.ca/projects/semdifflayout/data/3dfront_processed.tar.gz)
+**Download Link:** [3D-FRONT Processed Dataset](https://huggingface.co/datasets/3dlg-hcvc/semlayoutdiff/blob/main/data/3dfront_processed.tar.gz)
 
 **What's included:**
 - **`unified_w_arch_120x120.npy`**: SLDN training data (2D semantic layouts with room architecture)
