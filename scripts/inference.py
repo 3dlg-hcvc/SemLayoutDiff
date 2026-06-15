@@ -44,6 +44,142 @@ from semlayoutdiff.apm.inference_utils import (
     save_inference_summary
 )
 from preprocess.threed_front.datasets.threed_future_dataset import ThreedFutureDataset
+from semlayoutdiff.sldn.dataloader.front3d.front3d_fast import Front3DFast
+
+
+def room_type_to_condition_id(cfg: DictConfig) -> int:
+    """Map APM room_type names to SLDN room type condition IDs."""
+    if hasattr(cfg, 'sample_room_type'):
+        return int(cfg.sample_room_type)
+
+    room_type = str(cfg.room_type).lower()
+    if "bed" in room_type:
+        return 0
+    if "living" in room_type:
+        return 1
+    if "dining" in room_type:
+        return 2
+    raise ValueError(
+        f"Cannot infer SLDN room type condition from room_type={cfg.room_type!r}. "
+        "Use room_type bedroom/livingroom/diningroom or add sample_room_type."
+    )
+
+
+def sample_index_from_path(path: str) -> int:
+    """Extract the numeric SLDN sample index from sample_*-$idx.png names."""
+    stem = os.path.splitext(os.path.basename(path))[0]
+    try:
+        return int(stem.rsplit("-", 1)[-1])
+    except ValueError as exc:
+        raise ValueError(f"Cannot parse sample index from {path}") from exc
+
+
+def floor_plan_name_for_semantic_map(semantic_map_path: str) -> str:
+    """Return the raw floor-plan filename expected by SceneState export."""
+    sample_idx = sample_index_from_path(semantic_map_path)
+    return f"sample_unified_floor_plan-{sample_idx}.png"
+
+
+def read_raw_arch_map(path: str) -> Optional[np.ndarray]:
+    """Read an existing raw arch mask if it already uses labels 0/1/2/3."""
+    arch_map = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+    if arch_map is None:
+        return None
+    unique_values = set(np.unique(arch_map).astype(int).tolist())
+    if unique_values.issubset({0, 1, 2, 3}):
+        return arch_map.astype(np.uint8)
+    return None
+
+
+def load_sldn_raw_arch_maps(cfg: DictConfig) -> List[np.ndarray]:
+    """Load raw architecture condition maps matching SLDN original-data sampling."""
+    dataset_root = getattr(cfg, 'sldn_dataset_root', 'datasets')
+    dataset_split = getattr(cfg, 'sldn_dataset_split', 'unified_w_arch')
+    sample_room_type = room_type_to_condition_id(cfg)
+
+    dataset = Front3DFast(
+        root=dataset_root,
+        split=dataset_split,
+        floor_plan=True,
+        resolution=(120, 120),
+        w_arch=True,
+        room_type_condition=True,
+        text_condition=False,
+    )
+    return [
+        floor_plan.squeeze().cpu().numpy().astype(np.uint8)
+        for floor_plan in dataset.get_arch_floor_plan(sample_room_type)
+    ]
+
+
+def prepare_standard_semantic_maps(cfg: DictConfig, semantic_map_paths: List[str]) -> List[str]:
+    """Scale standard SLDN semantic labels to APM's configured resolution."""
+    output_dir = os.path.join(cfg.output_dir, "scaled_semantic_maps")
+    os.makedirs(output_dir, exist_ok=True)
+
+    prepared_paths = []
+    for path in semantic_map_paths:
+        semantic_map = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+        if semantic_map is None:
+            continue
+        if semantic_map.shape != (cfg.image_height, cfg.image_width):
+            semantic_map = cv2.resize(
+                semantic_map,
+                (cfg.image_width, cfg.image_height),
+                interpolation=cv2.INTER_NEAREST,
+            )
+        output_path = os.path.join(output_dir, os.path.basename(path))
+        cv2.imwrite(output_path, semantic_map)
+        prepared_paths.append(output_path)
+
+    return prepared_paths
+
+
+def prepare_standard_arch_maps(cfg: DictConfig, semantic_map_paths: List[str]) -> List[str]:
+    """Prepare raw 0/1/2/3 arch masks for standard SLDN inference outputs."""
+    if not getattr(cfg.scenestate, 'w_arch', False):
+        return []
+
+    source_dir = getattr(cfg.scenestate, 'floor_plan_dir', None)
+    output_dir = os.path.join(cfg.output_dir, "raw_arch_maps")
+    os.makedirs(output_dir, exist_ok=True)
+
+    sldn_raw_arch_maps = None
+    prepared_names = []
+    for semantic_map_path in semantic_map_paths:
+        floor_plan_name = floor_plan_name_for_semantic_map(semantic_map_path)
+        arch_map = None
+
+        if source_dir:
+            source_path = os.path.join(source_dir, floor_plan_name)
+            if os.path.exists(source_path):
+                arch_map = read_raw_arch_map(source_path)
+
+        if arch_map is None:
+            if sldn_raw_arch_maps is None:
+                sldn_raw_arch_maps = load_sldn_raw_arch_maps(cfg)
+            sample_idx = sample_index_from_path(semantic_map_path)
+            if sample_idx >= len(sldn_raw_arch_maps):
+                raise IndexError(
+                    f"Raw arch map index {sample_idx} is outside the available "
+                    f"{len(sldn_raw_arch_maps)} maps. Provide raw arch maps via "
+                    "scenestate.floor_plan_dir for this sample range."
+                )
+            arch_map = sldn_raw_arch_maps[sample_idx]
+
+        if arch_map.shape != (cfg.image_height, cfg.image_width):
+            arch_map = cv2.resize(
+                arch_map,
+                (cfg.image_width, cfg.image_height),
+                interpolation=cv2.INTER_NEAREST,
+            )
+
+        output_path = os.path.join(output_dir, floor_plan_name)
+        cv2.imwrite(output_path, arch_map)
+        prepared_names.append(floor_plan_name)
+
+    cfg.scenestate.floor_plan_dir = output_dir
+    return sorted(prepared_names)
 
 
 def load_model_and_datasets(cfg: DictConfig) -> Tuple[FurnitureAttributesModel, Dict, Dict, ThreedFutureDataset]:
@@ -137,11 +273,11 @@ def run_standard_inference(cfg: DictConfig,
                           new_label_to_generic_label: Dict,
                           objects_dataset: ThreedFutureDataset) -> int:
     """Run inference on standard semantic maps."""
-    semantic_map_paths = glob.glob(f"{cfg.semantic_map_dir}/*label*")
+    semantic_map_paths = sorted(glob.glob(f"{cfg.semantic_map_dir}/*label*"))
 
-    # Get floor plan paths if available
-    floor_plan_paths = []
-    if hasattr(cfg.scenestate, 'floor_plan_dir') and cfg.scenestate.floor_plan_dir:
+    semantic_map_paths = prepare_standard_semantic_maps(cfg, semantic_map_paths)
+    floor_plan_paths = prepare_standard_arch_maps(cfg, semantic_map_paths)
+    if not floor_plan_paths and hasattr(cfg.scenestate, 'floor_plan_dir') and cfg.scenestate.floor_plan_dir:
         floor_plan_paths = sorted(os.listdir(cfg.scenestate.floor_plan_dir))
 
     # Create output directory
