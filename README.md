@@ -199,7 +199,7 @@ Generate 2D semantic maps using the trained SLDN:
 python scripts/sample_layout.py --config configs/sldn/sample_layout.yaml
 ```
 
-Configure the script by editing `sample_layout.yaml`. Set `room_type` to `unified` and `sample_room_type` to 0, 1, or 2 for bedroom, dining room, and living room respectively. Use `samples: 5` to generate 5 layouts and `condition_type: "arch"` for architecture conditioning. Set `w_arch: true` to include doors/windows and specify `out_dir` for the output location.
+Configure the script by editing `sample_layout.yaml`. Set `room_type` to `unified` and `sample_room_type` to 0, 1, or 2 for bedroom, living room, and dining room respectively. Use `samples: 5` to generate 5 layouts and `condition_type: "arch"` for architecture conditioning. Set `w_arch: true` to include doors/windows and specify `out_dir` for the output location.
 
 #### 2. 3D Scene Generation
 
@@ -209,7 +209,7 @@ Convert semantic layouts to full 3D scenes with the APM:
 python scripts/inference.py --config-path=../configs/apm --config-name=unified_config
 ```
 
-Modify `unified_config.yaml` to set `semantic_map_dir` to your generated layouts directory, `room_type` to match the layout room type (bedroom/livingroom/diningroom), and `output_dir` for results. The script uses `checkpoint_path` to load the trained APM model.
+Modify `unified_config.yaml` to set `semantic_map_dir` to your generated layouts directory, `room_type` to match the layout room type (bedroom/livingroom/diningroom), and `output_dir` for results. For standard SLDN outputs, the script automatically scales 120×120 semantic maps to the APM resolution and prepares raw architecture masks for SceneState export. The script uses `checkpoint_path` to load the trained APM model.
 
 **Output:** Generated 3D scenes are saved as JSON files containing object positions, orientations, scales, categories, and 3D model IDs for furniture retrieval.
 
